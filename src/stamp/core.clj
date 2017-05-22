@@ -11,6 +11,8 @@
 
 (defroutes json-api
   (GET "/" [] api/index)
+  (GET "/certificates" [] api/certificates)
+  (POST "/certificates" [] api/add-cert)
   (GET "/debug/request" [] api/request)
   (GET "/debug/request/:part" [part] (api/request-part part))
   (not-found "Page not found"))

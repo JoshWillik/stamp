@@ -2,7 +2,9 @@
   (:require [clojure.string :as str])
   (:refer-clojure :exclude [get]))
 
-(def static-config {:server-port "8080"})
+(def static-config {:server-port "8080"
+  :mongo-database "stamp"
+  :mongo-address "localhost"})
 
 (defn static-get [key]
   (static-config (keyword (str/replace key "." "-"))))
