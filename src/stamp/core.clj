@@ -1,37 +1,22 @@
 (ns stamp.core
   (:gen-class)
   (:require
-    [clojure.data.json :as json]
-    [clojure.string :as str]
-    [stamp.util :as util]
+    [stamp.type :as type]
+    [stamp.api :as api]
     [stamp.config :as config])
-  (:use [org.httpkit.server :only [run-server]]))
+  (:use [org.httpkit.server :only [run-server]]
+    [compojure.core :only [defroutes GET POST PUT DELETE ANY context]]
+    [compojure.handler :only [site]]
+    [compojure.route :only [not-found]]))
 
-(def port (config/get "server.port" :type util/int))
+(defroutes json-api
+  (GET "/" [] api/index)
+  (GET "/debug/request" [] api/request)
+  (GET "/debug/request/:part" [part] (api/request-part part))
+  (not-found "Page not found"))
 
-(defn not-found [path]
-  {:status 404 :headers {"Content-Type" "text/plain"}
-    :body (str path " not found")})
-
-(defn text-ok [body]
-  {:status 200 :headers {"Content-Type" "text/plain"} :body body})
-
-(defn json-ok [body]
-  {:status 200 :headers {"Content-Type" "application/json"}
-    :body (json/write-str body)})
-
-(defn app [req]
-  (let
-    [url (req :uri)
-      req-key (re-matches #"/req/([^/]*)" url)]
-    (cond
-      (= url "/") (text-ok "Hello world")
-      (= url "/req") (json-ok (keys req))
-      req-key (json-ok (req (keyword (nth req-key 1))))
-      :else (not-found url))))
-
-(defonce server (atom nil))
+(def port (config/get "server.port" :type type/int))
 
 (defn -main "Simple certificate manager" [& args]
-  (reset! server (run-server #'app {:port port}))
+  (run-server (site #'json-api) {:port port})
   (println (str "Listening on :" port)))

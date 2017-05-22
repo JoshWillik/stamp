@@ -1,4 +1,4 @@
-(ns stamp.util
+(ns stamp.type
   (:refer-clojure :exclude [float int]))
 
 

@@ -7,6 +7,8 @@
   :dependencies [
     [org.clojure/clojure "1.8.0"]
     [org.clojure/data.json "0.2.6"]
+    [compojure "1.6.0"]
+    [ring/ring-jetty-adapter "1.4.0"]
     [http-kit "2.2.0"]]
   :main ^:skip-aot stamp.core
   :target-path "target/%s"
