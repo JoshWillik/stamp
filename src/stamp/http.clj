@@ -1,6 +1,6 @@
-(ns stamp.api
+(ns stamp.http
   (:require [clojure.data.json :as json]
-    [stamp.mongo :as mg]
+    [stamp.manager :as manager]
     [clojure.java.io :as io]))
 
 (defn send-json [data]
@@ -12,7 +12,7 @@
   "certificates" "/certificates"
   "debug_request" "/debug/request"})
 
-(defn absolute-path [req path]
+(defn- absolute-path [req path]
   (str "http://" (req :server-name) path))
 
 (defn index [req]
@@ -24,18 +24,9 @@
 (defn request-part [part]
   (fn [req] (send-json (req (keyword part)))))
 
-(defn certificates [req]
-  (let [conn (mg/connect)
-      db (mg/db conn)
-      certs (mg/find-maps db "certificates" {})]
-    (doall certs) ; tricky tricky, force the lazy list to evaluate fully
-    (mg/disconnect conn)
-    (send-json certs)))
-
 (defn add-cert [req]
-  (let [conn (mg/connect)
-      db (mg/db conn)
-      doc (mg/insert-and-return db "certificates"
-        (json/read (io/reader (req :body) :encoding "UTF-8")))]
-    (mg/disconnect conn)
-    (send-json doc)))
+  (let [body (json/read (io/reader (req :body) :encoding "UTF-8"))]
+    (send-json (manager/add-cert body))))
+
+(defn certificates [req]
+  (send-json (manager/get-certs)))

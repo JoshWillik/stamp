@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+curl -XPOST -H 'Content-Type: application/json' \
+  --data '{"domains": ["joshwillik.com", "www.joshwillik.com"]}' \
+  http://localhost:8080/certificates

@@ -1,18 +1,18 @@
 (ns stamp.mongo
-  (:require [monger.core :as mg]
-    [monger.collection :as mc]
+  (:require [monger.core]
+    [monger.collection]
     [monger.json]
     [stamp.config :as config])
   (:refer-clojure :exclude [find]))
 
 (defn connect []
-  (mg/connect {:host (config/get "mongo.address")}))
+  (monger.core/connect {:host (config/get "mongo.address")}))
 
-(def disconnect mg/disconnect)
+(def disconnect monger.core/disconnect)
 
 (defn db [conn]
-  (mg/get-db conn "stamp"))
+  (monger.core/get-db conn "stamp"))
 
-(def find-maps mc/find-maps)
+(def find-maps monger.collection/find-maps)
 
-(def insert-and-return mc/insert-and-return)
+(def insert-and-return monger.collection/insert-and-return)
