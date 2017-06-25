@@ -11,7 +11,10 @@
     [ring/ring-jetty-adapter "1.4.0"]
     [com.novemberain/monger "3.1.0"]
     [cheshire "5.1.1"]
-    [http-kit "2.2.0"]]
+    [http-kit "2.2.0"]
+    [com.auth0/java-jwt "3.2.0"]
+    [com.fasterxml.jackson.core/jackson-core "2.8.7"]
+    [org.bouncycastle/bcprov-jdk16 "1.46"]]
   :main ^:skip-aot stamp.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
